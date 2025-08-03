@@ -124,7 +124,150 @@ GET /menu/items/:id
 Returns details for a specific food item.
 
 #### Cart & Orders
-[Previous cart and order endpoints...]
+
+##### Cart Operations
+```
+GET /cart
+```
+Returns current user's cart contents
+```json
+{
+  "items": [
+    {
+      "id": "string",
+      "name": "string",
+      "quantity": number,
+      "price": number,
+      "totalPrice": number
+    }
+  ],
+  "totalItems": number,
+  "subtotal": number,
+  "tax": number,
+  "deliveryFee": number,
+  "total": number
+}
+```
+
+```
+POST /cart/items
+```
+Add item to cart
+```json
+{
+  "itemId": "string",
+  "quantity": number,
+  "specialInstructions": "string"
+}
+```
+
+```
+PUT /cart/items/:id
+```
+Update cart item quantity
+```json
+{
+  "quantity": number
+}
+```
+
+```
+DELETE /cart/items/:id
+```
+Remove item from cart
+
+##### Order Operations
+```
+POST /orders
+```
+Place a new order
+```json
+{
+  "deliveryAddress": {
+    "street": "string",
+    "city": "string",
+    "state": "string",
+    "zipCode": "string",
+    "instructions": "string"
+  },
+  "paymentMethod": {
+    "type": "CARD|WALLET|COD",
+    "cardToken": "string"
+  },
+  "scheduledTime": "string (ISO datetime, optional)"
+}
+```
+
+```
+GET /orders
+```
+List all orders (paginated)
+```json
+{
+  "orders": [
+    {
+      "id": "string",
+      "status": "PENDING|CONFIRMED|PREPARING|DELIVERING|DELIVERED",
+      "total": number,
+      "createdAt": "string (ISO datetime)",
+      "estimatedDeliveryTime": "string (ISO datetime)"
+    }
+  ],
+  "page": number,
+  "totalPages": number
+}
+```
+
+```
+GET /orders/:id
+```
+Get detailed order information
+```json
+{
+  "id": "string",
+  "items": [
+    {
+      "id": "string",
+      "name": "string",
+      "quantity": number,
+      "price": number
+    }
+  ],
+  "status": "PENDING|CONFIRMED|PREPARING|DELIVERING|DELIVERED",
+  "tracking": {
+    "currentLocation": {
+      "lat": number,
+      "lng": number
+    },
+    "deliveryPartner": {
+      "name": "string",
+      "phone": "string"
+    }
+  },
+  "payment": {
+    "status": "PENDING|COMPLETED|FAILED",
+    "method": "string",
+    "total": number
+  },
+  "timestamps": {
+    "ordered": "string",
+    "confirmed": "string",
+    "prepared": "string",
+    "pickedUp": "string",
+    "delivered": "string"
+  }
+}
+```
+
+```
+PUT /orders/:id/cancel
+```
+Cancel an order (only if status is PENDING)
+```json
+{
+  "reason": "string"
+}
+```
 
 ## Development Guide
 
